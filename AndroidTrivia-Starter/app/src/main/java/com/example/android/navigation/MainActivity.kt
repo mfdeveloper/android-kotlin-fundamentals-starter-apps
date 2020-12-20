@@ -19,13 +19,35 @@ package com.example.android.navigation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.example.android.navigation.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var navController: NavController
+    private lateinit var drawerLayout: DrawerLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         @Suppress("UNUSED_VARIABLE")
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        drawerLayout = binding.drawerLayout
+
+        navController = findNavController(R.id.myNavHostFragment)
+        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+
+        // Connect NavigationController with the sidebar/nav drawer
+        NavigationUI.setupWithNavController(binding.navView, navController)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+
+        // Use this method below instead of "navController.navigateUp()",
+        // to support go back when navigate from nav drawer
+        return NavigationUI.navigateUp(navController, drawerLayout)
     }
 
     // TODO (01) Create the new TitleFragment
